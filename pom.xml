@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.incenp</groupId>
   <artifactId>odk-robot-plugin</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1-SNAPSHOT</version>
 
   <name>ODK ROBOT plugin</name>
   <description>ROBOT plugin for the Ontology Development Kit</description>
@@ -26,7 +26,7 @@
     <connection>scm:git:https://github.com/INCATools/odk-robot-plugin.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/INCATools/odk-robot-plugin.git</developerConnection>
     <url>https://github.com/INCATools/odk-robot-plugin</url>
-    <tag>odk-robot-plugin-0.1.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>

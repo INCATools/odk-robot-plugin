@@ -6,7 +6,7 @@
 
   <name>ODK ROBOT plugin</name>
   <description>ROBOT plugin for the Ontology Development Kit</description>
-  <url>https://github.com/gouttegd/odk-robot-plugin</url>
+  <url>https://github.com/INCATools/odk-robot-plugin</url>
 
   <licenses>
     <license>
@@ -23,15 +23,15 @@
   </developers>
 
   <scm>
-    <connection>scm:git:https://github.com/gouttegd/odk-robot-plugin.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/gouttegd/odk-robot-plugin.git</developerConnection>
-    <url>https://github.com/gouttegd/odk-robot-plugin</url>
+    <connection>scm:git:https://github.com/INCATools/odk-robot-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/INCATools/odk-robot-plugin.git</developerConnection>
+    <url>https://github.com/INCATools/odk-robot-plugin</url>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/gouttegd/odk-robot-plugin</url>
+    <url>https://github.com/INCATools/odk-robot-plugin</url>
   </issueManagement>
 
   <dependencies>

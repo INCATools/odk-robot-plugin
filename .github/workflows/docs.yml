@@ -3,6 +3,7 @@ name: Build and publish the documentation
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:

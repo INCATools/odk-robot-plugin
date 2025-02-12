@@ -149,7 +149,7 @@ public class SubsetExtractor {
      * When filling gaps, by default all referenced classes are included in the
      * extended subset. If this method is used, then only classes whose IRI starts
      * with the specified prefix will be included. This takes precedence over
-     * “excluded prefixes” as added by the {@link #excludedPrefixes} method.
+     * “excluded prefixes” as added by the {@link #excludePrefix(String)} method.
      * <p>
      * This method may be called several times to define several namespaces. A class
      * will be included if its IRI matches any of the included prefixes.
@@ -171,8 +171,8 @@ public class SubsetExtractor {
      * <p>
      * If this method is used, then classes whose IRI starts with the specified
      * prefix will never be included when filling gaps. This method is incompatible
-     * with the use of {@link #includedPrefixes}, which takes precedence if both
-     * methods are used on the same instance.
+     * with the use of {@link #includePrefix(String)}, which takes precedence if
+     * both methods are used on the same instance.
      * <p>
      * This method may be called several times to define several namespaces. A class
      * will be included only if its IRI does not match any of the excluded prefixes.

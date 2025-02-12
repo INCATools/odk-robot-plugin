@@ -41,6 +41,17 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
+/**
+ * A command to create an ontology subset.
+ * <p>
+ * That command is intended to replace both the
+ * <code>--extract-ontology-subset --fill-gaps</code> and the
+ * <code>--reasoner-query --make-ontology-from-results</code> commands of
+ * OWLTools. As such, it supplements the <code>extract -m subset</code> command
+ * of the standard distribution of ROBOT, which can be used to replace the
+ * <code>--extract-ontology-subset</code> OWLTools command (note the absence of
+ * <code>--fill-gaps</code>!).
+ */
 public class SubsetCommand extends BasePlugin {
 
     private static final Logger logger = LoggerFactory.getLogger(SubsetCommand.class);

@@ -37,4 +37,6 @@ public class Constants {
     public static final IRI SYNONYM_TYPE_PROPERTY = IRI.create(OIO_PREFIX + "SynonymTypeProperty");
 
     public static final IRI COB_IRI = IRI.create("http://purl.obolibrary.org/obo/cob.owl");
+
+    public static final IRI PREFERRED_ROOT_PROPERTY = IRI.create("http://purl.obolibrary.org/obo/IAO_0000700");
 }

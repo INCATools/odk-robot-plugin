@@ -12,8 +12,8 @@ Available commands
 Currently, the ODK ROBOT plugin provides the following commands:
 
 * [odk:subset](subset.html), to create ontology subsets;
-* [odk:validate](validate.html), to check the alignment of an ontology
-  against an upper-level ontology;
+* [odk:check-align](alignment.html), to check the alignment of an
+  ontology against an upper-level ontology and/or arbitrary root terms;
 * [odk:normalize](normalize.html), to perform various normalisation
   operations on an ontology.
   

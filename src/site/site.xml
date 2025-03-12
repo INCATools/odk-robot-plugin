@@ -10,7 +10,7 @@
     </menu>
     <menu name="Commands">
       <item name="subset" href="subset.html" />
-      <item name="validate" href="validate.html" />
+      <item name="check-align" href="alignment.html" />
       <item name="normalize" href="normalize.html" />
     </menu>
     <menu name="Links">

@@ -93,20 +93,14 @@ public class SubsetCommand extends BasePlugin {
         extractor.setFillGaps(CommandLineHelper.getBooleanValue(line, "fill-gaps", false));
         extractor.setExcludeDangling(CommandLineHelper.getBooleanValue(line, "no-dangling", true));
         extractor.includeImports(useImports);
-        if ( line.hasOption("follow-property") ) {
-            for ( String property : line.getOptionValues("follow-property") ) {
-                extractor.followProperty(getIRI(property, "follow-property"));
-            }
+        for ( String property : CommandLineHelper.getOptionalValues(line, "follow-property") ) {
+            extractor.followProperty(getIRI(property, "follow-property"));
         }
-        if ( line.hasOption("follow-in") ) {
-            for ( String prefix : line.getOptionValues("follow-in") ) {
-                extractor.includePrefix(getIRI(prefix, "follow-in").toString());
-            }
+        for ( String prefix : CommandLineHelper.getOptionalValues(line, "follow-in") ) {
+            extractor.includePrefix(getIRI(prefix, "follow-in").toString());
         }
-        if ( line.hasOption("not-follow-in") ) {
-            for ( String prefix : line.getOptionValues("not-follow-in") ) {
-                extractor.excludePrefix(getIRI(prefix, "not-follow-in").toString());
-            }
+        for ( String prefix : CommandLineHelper.getOptionalValues(line, "not-follow-in") ) {
+            extractor.excludePrefix(getIRI(prefix, "not-follow-in").toString());
         }
 
         // Setting up the initial subset
@@ -136,30 +130,17 @@ public class SubsetCommand extends BasePlugin {
         }
 
         // 2. From the name or IRI of a subset defined in the ontology
-        if ( line.hasOption("subset") ) {
-            for ( String subsetName : line.getOptionValues("subset") ) {
-                IRI subsetIRI = ioHelper.createIRI(subsetName);
-                if ( subsetIRI != null ) {
-                    addToSubset(subset, extractor.getSubset(subsetIRI), "Adding tagged class {}");
-                } else {
-                    addToSubset(subset, extractor.getSubset(subsetName), "Adding tagged class {}");
-                }
+        for ( String subsetName : CommandLineHelper.getOptionalValues(line, "subset") ) {
+            IRI subsetIRI = ioHelper.createIRI(subsetName);
+            if ( subsetIRI != null ) {
+                addToSubset(subset, extractor.getSubset(subsetIRI), "Adding tagged class {}");
+            } else {
+                addToSubset(subset, extractor.getSubset(subsetName), "Adding tagged class {}");
             }
         }
 
         // 3. From an explicit list of terms
-        Set<IRI> terms = new HashSet<>();
-        if ( line.hasOption("term") ) {
-            for ( String term : line.getOptionValues("term") ) {
-                terms.add(getIRI(term, "term"));
-            }
-        }
-        if ( line.hasOption("term-file") ) {
-            for ( String termFile : line.getOptionValues("term-file") ) {
-                terms.addAll(readFileAsIRIs(termFile));
-            }
-        }
-        for ( IRI term : terms ) {
+        for ( IRI term : CommandLineHelper.getTerms(ioHelper, line, true) ) {
             if ( ontology.containsClassInSignature(term, useImports ? Imports.INCLUDED : Imports.EXCLUDED) ) {
                 subset.add(factory.getOWLClass(term));
                 logger.debug("Adding selected class {}", term);

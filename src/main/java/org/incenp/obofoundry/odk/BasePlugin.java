@@ -18,12 +18,6 @@
 
 package org.incenp.obofoundry.odk;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.obolibrary.robot.Command;
@@ -137,55 +131,5 @@ public abstract class BasePlugin implements Command {
      */
     protected IRI getIRI(String term, String field) {
         return CommandLineHelper.maybeCreateIRI(ioHelper, term, field);
-    }
-
-    /**
-     * Reads a file and gets its contents as a set, one entry per line, excluding
-     * any blank line and lines starting with a '#' character.
-     * 
-     * @param filename The name of the file to read.
-     * @return The file's lines as a set of unique strings.
-     * @throws IOException If any I/O error occurs when reading the file.
-     */
-    protected Set<String> readFile(String filename) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(filename));
-        Set<String> lines = new HashSet<>();
-        String line = null;
-        while ( (line = reader.readLine()) != null ) {
-            line = line.trim();
-            if ( !line.isEmpty() && line.charAt(0) != '#' ) {
-                lines.add(line);
-            }
-        }
-        reader.close();
-
-        return lines;
-    }
-
-    /**
-     * Reads a file and gets its contents as a set of IRIs, assuming one IRI per
-     * line, excluding any blank line and lines starting with a '#' character.
-     * CURIEs that cannot be converted to a full-length IRI are silently ignored.
-     * 
-     * @param filename The name of the file to read.
-     * @return The set of IRIs contained in the file.
-     * @throws IOException If any I/O error occurs when reading the file.
-     */
-    protected Set<IRI> readFileAsIRIs(String filename) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(filename));
-        Set<IRI> terms = new HashSet<>();
-        String line = null;
-        while ( (line = reader.readLine()) != null ) {
-            line = line.trim();
-            if ( !line.isEmpty() && line.charAt(0) != '#' ) {
-                IRI termIRI = ioHelper.createIRI(line);
-                if ( termIRI != null ) {
-                    terms.add(termIRI);
-                }
-            }
-        }
-        reader.close();
-
-        return terms;
     }
 }

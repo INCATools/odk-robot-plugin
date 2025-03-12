@@ -90,7 +90,7 @@ public class CheckAlignmentCommand extends BasePlugin {
         boolean failOnError = CommandLineHelper.getBooleanValue(line, "fail", true);
         if ( line.hasOption("base-iri") ) {
             for ( String iri : line.getOptionValues("base-iri") ) {
-                basePrefixes.add(iri);
+                basePrefixes.add(getIRI(iri, "base-iri").toString());
             }
         }
         factory = state.getOntology().getOWLOntologyManager().getOWLDataFactory();

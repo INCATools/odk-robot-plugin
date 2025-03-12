@@ -100,12 +100,12 @@ public class SubsetCommand extends BasePlugin {
         }
         if ( line.hasOption("follow-in") ) {
             for ( String prefix : line.getOptionValues("follow-in") ) {
-                extractor.includePrefix(prefix);
+                extractor.includePrefix(getIRI(prefix, "follow-in").toString());
             }
         }
         if ( line.hasOption("not-follow-in") ) {
             for ( String prefix : line.getOptionValues("not-follow-in") ) {
-                extractor.excludePrefix(prefix);
+                extractor.excludePrefix(getIRI(prefix, "not-follow-in").toString());
             }
         }
 

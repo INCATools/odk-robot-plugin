@@ -86,6 +86,9 @@ public class NormalizeCommand extends BasePlugin {
         boolean doSubsetDecls = CommandLineHelper.getBooleanValue(line, "subset-decls", defValue);
         boolean doSynonymDecls = CommandLineHelper.getBooleanValue(line, "synonym-decls", defValue);
         boolean doInjectSource = CommandLineHelper.getBooleanValue(line, "add-source", false);
+        for ( String prefix : CommandLineHelper.getOptionalValues(line, "base-iri") ) {
+            basePrefixes.add(getIRI(prefix, "base-iri").toString());
+        }
 
         OWLOntology ontology = state.getOntology();
 

@@ -15,7 +15,9 @@ Currently, the ODK ROBOT plugin provides the following commands:
 * [odk:check-align](alignment.html), to check the alignment of an
   ontology against an upper-level ontology and/or arbitrary root terms;
 * [odk:normalize](normalize.html), to perform various normalisation
-  operations on an ontology.
+  operations on an ontology;
+* [odk:import](import.html), to add or remove import declarations in an
+  ontology.
   
 Using with the ODK
 ------------------

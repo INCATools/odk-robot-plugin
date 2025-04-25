@@ -14,7 +14,8 @@ The following commands are provided by the plugin:
 * `odk:subset`: to create ontology subsets;
 * `odk:check-align`: to check the alignment of an ontology against an
   upper-level ontology and/or arbitrary root terms;
-* `odk:normalize`: to “normalise” an ontology.
+* `odk:normalize`: to “normalise” an ontology,
+* `odk:import`: to add/remove import declarations.
 
 Building
 --------

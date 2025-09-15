@@ -18,7 +18,9 @@
 
 package org.incenp.obofoundry.odk;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
@@ -27,7 +29,10 @@ import org.obolibrary.robot.CommandState;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassAxiom;
+import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.parameters.Imports;
@@ -83,6 +88,10 @@ public class CheckCommand extends BasePlugin {
                 axioms.addAll(ontology.getAxioms((OWLClass) entity, Imports.INCLUDED));
             } else if ( entity instanceof OWLObjectProperty ) {
                 axioms.addAll(ontology.getAxioms((OWLObjectProperty) entity, Imports.INCLUDED));
+            } else if ( entity instanceof OWLDataProperty ) {
+                axioms.addAll(ontology.getAxioms((OWLDataProperty) entity, Imports.INCLUDED));
+            } else if ( entity instanceof OWLNamedIndividual ) {
+                axioms.addAll(ontology.getAxioms((OWLNamedIndividual) entity, Imports.INCLUDED));
             }
 
             for ( OWLAxiom axiom : axioms ) {
@@ -91,6 +100,26 @@ public class CheckCommand extends BasePlugin {
                         pass = false;
                         logger.warn("{} references deprecated entity {}", entity.getIRI(), referenced.getIRI());
                     }
+                }
+            }
+        }
+
+        for ( OWLOntology ont : ontology.getImportsClosure() ) {
+            for ( OWLClassAxiom gca : ont.getGeneralClassAxioms() ) {
+                boolean hasEntitiesInBase = false;
+                List<String> deprecatedEntities = new ArrayList<>();
+                for ( OWLEntity referenced : gca.getSignature() ) {
+                    if ( isInBase(referenced.getIRI().toString()) ) {
+                        hasEntitiesInBase = true;
+                    }
+                    if ( isDeprecated(ontology, referenced) ) {
+                        deprecatedEntities.add(referenced.getIRI().toString());
+                    }
+                }
+                if ( hasEntitiesInBase && !deprecatedEntities.isEmpty() ) {
+                    pass = false;
+                    logger.warn("A general class axiom references deprecated entities: {}",
+                            String.join(", ", deprecatedEntities));
                 }
             }
         }

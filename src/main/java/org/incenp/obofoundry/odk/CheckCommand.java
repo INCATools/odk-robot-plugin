@@ -19,8 +19,10 @@
 package org.incenp.obofoundry.odk;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
@@ -44,6 +46,7 @@ public class CheckCommand extends BasePlugin {
     private static final Logger logger = LoggerFactory.getLogger(CheckCommand.class);
 
     private Set<String> basePrefixes = new HashSet<>();
+    private Map<OWLEntity, Boolean> cache = new HashMap<>();
 
     public CheckCommand() {
         super("check", "perform some checks on an ontology", "robot check --checks [CHECK,...]");
@@ -58,6 +61,7 @@ public class CheckCommand extends BasePlugin {
         for ( String prefix : CommandLineHelper.getOptionalValues(line, "base-iri") ) {
             basePrefixes.add(getIRI(prefix, "base-iri").toString());
         }
+        cache.clear();
 
         int failed = 0;
         for ( String check : line.getOptionValues("checks") ) {
@@ -128,13 +132,20 @@ public class CheckCommand extends BasePlugin {
     }
 
     private boolean isDeprecated(OWLOntology ontology, OWLEntity entity) {
+        Boolean cached = cache.get(entity);
+        if ( cached != null ) {
+            return cached;
+        }
+
         for ( OWLOntology ont : ontology.getImportsClosure() ) {
             for ( OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(entity.getIRI()) ) {
                 if ( ax.isDeprecatedIRIAssertion() ) {
+                    cache.put(entity, true);
                     return true;
                 }
             }
         }
+        cache.put(entity, false);
         return false;
     }
 

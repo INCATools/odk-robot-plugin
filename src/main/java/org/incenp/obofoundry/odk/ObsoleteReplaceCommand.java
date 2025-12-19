@@ -1,6 +1,7 @@
 /*
  * ODK ROBOT Plugin
  * Copyright © 2025 Nico Matentzoglu
+ * This Command was strongly inspired by https://github.com/owlcollab/owltools/blob/master/OWLTools-Runner/src/main/java/owltools/cli/CommandRunner.java
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -84,6 +84,7 @@ public class StandaloneRobot {
         m.addCommand("validate-profile", new ValidateProfileCommand());
         m.addCommand("verify", new VerifyCommand());
         m.addCommand("odk:normalize", new NormalizeCommand());
+        m.addCommand("odk:obsolete-replace", new ObsoleteReplaceCommand());
         m.addCommand("odk:subset", new SubsetCommand());
         m.addCommand("odk:validate", new CheckAlignmentCommand());
 

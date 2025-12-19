@@ -39,4 +39,16 @@ public class Constants {
     public static final IRI COB_IRI = IRI.create("http://purl.obolibrary.org/obo/cob.owl");
 
     public static final IRI PREFERRED_ROOT_PROPERTY = IRI.create("http://purl.obolibrary.org/obo/IAO_0000700");
+
+    public static final IRI RDFS_LABEL = IRI.create("http://www.w3.org/2000/01/rdf-schema#label");
+
+    public static final IRI RDFS_COMMENT = IRI.create("http://www.w3.org/2000/01/rdf-schema#comment");
+
+    public static final IRI IAO_DEFINITION = IRI.create("http://purl.obolibrary.org/obo/IAO_0000115");
+
+    public static final IRI HAS_EXACT_SYNONYM = IRI.create(OIO_PREFIX + "hasExactSynonym");
+
+    public static final IRI HAS_DBXREF = IRI.create(OIO_PREFIX + "hasDbXref");
+
+    public static final IRI TERM_REPLACED_BY = IRI.create("http://purl.obolibrary.org/obo/IAO_0100001");
 }

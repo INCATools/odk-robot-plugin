@@ -12,6 +12,8 @@
       <item name="subset" href="subset.html" />
       <item name="check-align" href="alignment.html" />
       <item name="normalize" href="normalize.html" />
+      <item name="import" href="import.html "/>
+      <item name="obsolete-replace" href="obsolete-replace.html" />
     </menu>
     <menu name="Links">
       <item name="Issue tracker" href="https://github.com/INCATools/odk-robot-plugin/issues" />

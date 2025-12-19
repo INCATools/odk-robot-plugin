@@ -14,10 +14,14 @@ Currently, the ODK ROBOT plugin provides the following commands:
 * [odk:subset](subset.html), to create ontology subsets;
 * [odk:check-align](alignment.html), to check the alignment of an
   ontology against an upper-level ontology and/or arbitrary root terms;
+* `odk:check` (documentation TBD), to perform other various checks on an
+  ontology;
 * [odk:normalize](normalize.html), to perform various normalisation
   operations on an ontology;
 * [odk:import](import.html), to add or remove import declarations in an
   ontology.
+* [odk:obsolete-replace](obsolete-replace.html), to obsolete an entity
+  replace all its usages with another entity.
   
 Using with the ODK
 ------------------

@@ -98,9 +98,17 @@ because `--fail false` was used), the next command in the pipeline
 receives the original, unmodified ontology.
 
 To produce a report from the validation results, use the
-`--report-output <FILE>` option. The file will contain a list of all the
-top-level classes (if any) of the input ontology that are not aligned
-against the upper ontology.
+`--report-output <FILE>` option. What will be included in this report is
+controlled by the `--detail <MODE>` option:
+
+* `--detail ROOT` will report all the top-level classes (if any) of the
+  input ontology that are not aligned against the upper ontology; this is
+  the default behaviour;
+* `--detail BASE-ROOT` will report the highest “in-base” classes that
+  are not aligned and all their ascendants up to the top-level classes;
+  this is only meaningful if `--base-iri` is also used, otherwise this
+  is the same as `--detail ROOT`;
+* `--detail ALL` will report all unaligned classes.
 
 Restricting the scope of the validation
 ---------------------------------------

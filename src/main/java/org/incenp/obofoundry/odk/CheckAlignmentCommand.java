@@ -81,6 +81,7 @@ public class CheckAlignmentCommand extends BasePlugin {
 
         options.addOption("r", "reasoner", true, "the reasoner to use");
         options.addOption("O", "report-output", true, "write report to the specified file");
+        options.addOption(null, "detail", true, "what to report (ROOT / BASE-ROOT / ALL)");
         options.addOption("x", "fail", true, "if true (default), fail if the ontology is misaligned");
     }
 
@@ -88,10 +89,14 @@ public class CheckAlignmentCommand extends BasePlugin {
     public void performOperation(CommandState state, CommandLine line) throws Exception {
         boolean ignoreDangling = CommandLineHelper.getBooleanValue(line, "ignore-dangling", false);
         boolean failOnError = CommandLineHelper.getBooleanValue(line, "fail", true);
+        ReportMode reportMode = ReportMode.fromString(CommandLineHelper.getDefaultValue(line, "detail", "root"));
         if ( line.hasOption("base-iri") ) {
             for ( String iri : line.getOptionValues("base-iri") ) {
                 basePrefixes.add(getIRI(iri, "base-iri").toString());
             }
+        } else if ( reportMode == ReportMode.BASE_ROOT ) {
+            // --detail BASE-ROOT makes no sense without a base IRI
+            reportMode = ReportMode.GLOBAL_ROOT;
         }
         factory = state.getOntology().getOWLOntologyManager().getOWLDataFactory();
 
@@ -130,14 +135,14 @@ public class CheckAlignmentCommand extends BasePlugin {
         }
 
         OWLReasoner reasoner = CommandLineHelper.getReasonerFactory(line).createReasoner(ontology);
-        Set<OWLClass> unalignedClasses = getUnalignedClasses(ontology, reasoner, upperClasses, ignoreDangling);
+        Set<OWLClass> unalignedClasses = getAllUnalignedClasses(ontology, reasoner, upperClasses, ignoreDangling);
 
         if ( line.hasOption("report-output") ) {
             // If a report has been requested, we always produce it, even if no unaligned
             // classes were found
             BufferedWriter writer = new BufferedWriter(new FileWriter(line.getOptionValue("report-output")));
             List<String> unalignedIRIs = new ArrayList<>();
-            for ( OWLClass unalignedClass : unalignedClasses ) {
+            for ( OWLClass unalignedClass : trimReport(reasoner, unalignedClasses, reportMode) ) {
                 unalignedIRIs.add(unalignedClass.getIRI().toString());
             }
             unalignedIRIs.sort((a, b) -> a.compareTo(b));
@@ -149,7 +154,7 @@ public class CheckAlignmentCommand extends BasePlugin {
         }
 
         if ( !unalignedClasses.isEmpty() ) {
-            logger.error("Ontology contains {} top-level unaligned class(es)", unalignedClasses.size());
+            logger.error("Ontology contains {} unaligned class(es)", unalignedClasses.size());
             if ( failOnError ) {
                 System.exit(1);
             }
@@ -191,10 +196,7 @@ public class CheckAlignmentCommand extends BasePlugin {
         return roots;
     }
 
-    /*
-     * Gets all top-level unaligned classes in the ontology.
-     */
-    private Set<OWLClass> getUnalignedClasses(OWLOntology ontology, OWLReasoner reasoner, Set<OWLClass> upperClasses,
+    private Set<OWLClass> getAllUnalignedClasses(OWLOntology ontology, OWLReasoner reasoner, Set<OWLClass> upperClasses,
             boolean ignoreDangling) {
         Set<OWLClass> unalignedClasses = new HashSet<>();
         for ( OWLClass klass : ontology.getClassesInSignature(Imports.INCLUDED) ) {
@@ -203,6 +205,10 @@ public class CheckAlignmentCommand extends BasePlugin {
                     continue;
                 }
                 if ( Util.isObsolete(ontology, klass) ) {
+                    continue;
+                }
+                if ( unalignedClasses.contains(klass) ) {
+                    // Already found, skip
                     continue;
                 }
 
@@ -214,26 +220,47 @@ public class CheckAlignmentCommand extends BasePlugin {
                         break;
                     }
                 }
+
                 if ( !aligned ) {
-                    if ( ancestors.size() == 1 ) {
-                        // This is already a top-level class
-                        logger.debug("Unaligned class: {}", klass.getIRI().toQuotedString());
-                        unalignedClasses.add(klass);
-                    } else {
-                        // Find the top-level ancestor(s)
-                        for ( OWLClass ancestor : ancestors ) {
-                            if ( reasoner.getSuperClasses(ancestor, false).isTopSingleton() ) {
-                                logger.debug("Unaligned class: {} (from {})", ancestor.getIRI().toQuotedString(),
-                                        klass.getIRI().toQuotedString());
-                                unalignedClasses.add(ancestor);
-                            }
-                        }
-                    }
+                    logger.debug("Unaligned class: {}", klass.getIRI().toQuotedString());
+                    unalignedClasses.add(klass);
+                    // If this class is unaligned, then all its ancestors necessarily are too
+                    unalignedClasses.addAll(ancestors);
                 }
             }
         }
 
+        unalignedClasses.remove(factory.getOWLThing());
         return unalignedClasses;
+    }
+
+    private Set<OWLClass> trimReport(OWLReasoner reasoner, Set<OWLClass> unalignedClasses, ReportMode mode) {
+        Set<OWLClass> trimmedOut = new HashSet<>();
+        Set<OWLClass> reportSet = new HashSet<>();
+
+        if ( mode == ReportMode.GLOBAL_ROOT ) {
+            // Exclude any class that is not a top-level class
+            for ( OWLClass unaligned : unalignedClasses ) {
+                if ( !reasoner.getSuperClasses(unaligned, false).isTopSingleton() ) {
+                    trimmedOut.add(unaligned);
+                }
+            }
+        } else if ( mode == ReportMode.BASE_ROOT ) {
+            // Exclude any class that is a descendant of an in-base class
+            for ( OWLClass unaligned : unalignedClasses ) {
+                if ( isInBase(unaligned.getIRI().toString()) ) {
+                    trimmedOut.addAll(reasoner.getSubClasses(unaligned, false).getFlattened());
+                }
+            }
+        }
+
+        for ( OWLClass unaligned : unalignedClasses ) {
+            if ( !trimmedOut.contains(unaligned) ) {
+                reportSet.add(unaligned);
+            }
+        }
+
+        return reportSet;
     }
 
     private boolean isInBase(String iri) {
@@ -243,5 +270,21 @@ public class CheckAlignmentCommand extends BasePlugin {
             }
         }
         return basePrefixes.isEmpty();
+    }
+
+    private enum ReportMode {
+        GLOBAL_ROOT,
+        BASE_ROOT,
+        ALL;
+
+        static ReportMode fromString(String name) {
+            if ( name.equalsIgnoreCase("all") ) {
+                return ALL;
+            } else if ( name.equalsIgnoreCase("base-root") ) {
+                return BASE_ROOT;
+            } else {
+                return GLOBAL_ROOT;
+            }
+        }
     }
 }

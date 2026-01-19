@@ -105,7 +105,7 @@ controlled by the `--detail <MODE>` option:
   input ontology that are not aligned against the upper ontology; this is
   the default behaviour;
 * `--detail BASE-ROOT` will report the highest “in-base” classes that
-  are not aligned and all their ascendants up to the top-level classes;
+  are not aligned and all their ancestors up to the top-level classes;
   this is only meaningful if `--base-iri` is also used, otherwise this
   is the same as `--detail ROOT`;
 * `--detail ALL` will report all unaligned classes.

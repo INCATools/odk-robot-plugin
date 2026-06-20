@@ -20,15 +20,21 @@ robot odk:extract-orcids -i myont.owl -o orcids.owl
 
 The newly created `orcids.owl` file will contain the axioms defining the
 individuals that represent all the ORCID identifiers referenced in
-`dcterms:contributor` annotations within the `myont.owl` ontology.
+annotations within the `myont.owl` ontology.
 
 Finding ORCID references
 ------------------------
-By default, `odk:extract-orcids` looks for ORCID references in
-annotations that use the `http://purl.org/dc/terms/contributor`
-property. Use the `--property <IRI>` option to specify another property
-to look for. The option may be repeated as needed to find ORCID
-references in annotations using several properties.
+By default, `odk:extract-orcids` looks for ORCID references in all
+IRI-valued annotations in the input ontology. To look for ORCID
+references only in annotation that use a specific annotation property,
+use the `--property <IRI>` option.
+
+For example, to extract ORCID references in
+`http://purl.org/dc/terms/contributor` annotations only, use
+`--property dc:contributor`.
+
+The option may be repeated as needed to find ORCID references in
+annotations using several annotation properties.
 
 ORCIDIO source
 --------------

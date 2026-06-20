@@ -35,7 +35,6 @@ import org.semanticweb.owlapi.model.parameters.Imports;
 
 public class ExtractOrcidCommand extends BasePlugin {
 
-    private final static IRI CONTRIBUTOR = IRI.create("http://purl.org/dc/terms/contributor");
     private final static IRI ORCIDIO = IRI.create("https://w3id.org/orcidio/orcidio.owl");
 
     public ExtractOrcidCommand() {
@@ -59,8 +58,6 @@ public class ExtractOrcidCommand extends BasePlugin {
             for ( String p : line.getOptionValues("property") ) {
                 properties.add(getIRI(p, "property"));
             }
-        } else {
-            properties.add(CONTRIBUTOR);
         }
 
         // Collect all IRIs used in annotation with the target properties
@@ -101,14 +98,12 @@ public class ExtractOrcidCommand extends BasePlugin {
     }
 
     // Given an annotation, check if its property is one of the properties we are
-    // looking for; if it is and the annotation value is either an IRI or a literal,
-    // add the value to the refs set.
+    // looking for; if it is (or if we are accepting any annotation property) and
+    // the annotation value is an IRI, add the value to the refs set.
     private void processAnnotation(OWLAnnotation annotation, Set<IRI> refs, Set<IRI> properties) {
-        if ( properties.contains(annotation.getProperty().getIRI()) ) {
+        if ( properties.isEmpty() || properties.contains(annotation.getProperty().getIRI()) ) {
             if ( annotation.getValue().isIRI() ) {
                 refs.add(annotation.getValue().asIRI().get());
-            } else if ( annotation.getValue().isLiteral() ) {
-                refs.add(IRI.create(annotation.getValue().asLiteral().get().getLiteral()));
             }
         }
     }

@@ -22,6 +22,8 @@ Currently, the ODK ROBOT plugin provides the following commands:
   ontology.
 * [odk:obsolete-replace](obsolete-replace.html), to obsolete an entity
   replace all its usages with another entity.
+* [odk:extract-orcids](extract-orcids.html), to create a module
+  containing all the ORCID individuals referenced in an ontology.
   
 Using with the ODK
 ------------------

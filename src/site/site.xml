@@ -14,6 +14,7 @@
       <item name="normalize" href="normalize.html" />
       <item name="import" href="import.html "/>
       <item name="obsolete-replace" href="obsolete-replace.html" />
+      <item name="extract-orcids" href="extract-orcids.html" />
     </menu>
     <menu name="Links">
       <item name="Issue tracker" href="https://github.com/INCATools/odk-robot-plugin/issues" />

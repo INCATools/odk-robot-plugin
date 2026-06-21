@@ -28,7 +28,6 @@ import java.util.Set;
 import org.apache.commons.cli.CommandLine;
 import org.obolibrary.robot.CommandLineHelper;
 import org.obolibrary.robot.CommandState;
-import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAxiom;
@@ -132,21 +131,14 @@ public class CheckCommand extends BasePlugin {
     }
 
     private boolean isDeprecated(OWLOntology ontology, OWLEntity entity) {
-        Boolean cached = cache.get(entity);
-        if ( cached != null ) {
-            return cached;
+        Boolean deprecated = cache.get(entity);
+        if ( deprecated != null ) {
+            return deprecated;
         }
 
-        for ( OWLOntology ont : ontology.getImportsClosure() ) {
-            for ( OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(entity.getIRI()) ) {
-                if ( ax.isDeprecatedIRIAssertion() ) {
-                    cache.put(entity, true);
-                    return true;
-                }
-            }
-        }
-        cache.put(entity, false);
-        return false;
+        deprecated = Util.isObsolete(ontology, entity);
+        cache.put(entity, deprecated);
+        return deprecated;
     }
 
     private boolean isInBase(String iri) {

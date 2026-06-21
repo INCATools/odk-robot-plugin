@@ -19,11 +19,10 @@
 package org.incenp.obofoundry.odk;
 
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
-import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.parameters.Imports;
@@ -61,22 +60,16 @@ public final class Util {
     }
 
     /**
-     * Checks whether a class is marked as obsolete.
+     * Checks whether an entity is marked as obsolete.
      * 
-     * @param ontology The ontology the class belongs to.
-     * @param klass    The class to check.
-     * @return {@code true} if the class is obsolete, {@code false} otherwise.
+     * @param ontology The ontology the entity belongs to.
+     * @param entity   The entity to check.
+     * @return {@code true} if the entity is obsolete, {@code false} otherwise.
      */
-    public static boolean isObsolete(OWLOntology ontology, OWLClass klass) {
-        for ( OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(klass.getIRI()) ) {
-            if ( ax.getProperty().isDeprecated() ) {
-                OWLAnnotationValue value = ax.getValue();
-                if ( value.isLiteral() ) {
-                    OWLLiteral litValue = value.asLiteral().get();
-                    if ( litValue.isBoolean() && litValue.getLiteral().equals("true") ) {
-                        return true;
-                    }
-                }
+    public static boolean isObsolete(OWLOntology ontology, OWLEntity entity) {
+        for ( OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(entity.getIRI()) ) {
+            if ( ax.isDeprecatedIRIAssertion() ) {
+                return true;
             }
         }
         return false;

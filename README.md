@@ -11,16 +11,16 @@ Available commands
 ------------------
 The following commands are provided by the plugin:
 
-* `odk:subset`: to create ontology subsets;
 * `odk:check-align`: to check the alignment of an ontology against an
   upper-level ontology and/or arbitrary root terms;
-* `odk:normalize`: to "normalise" an ontology;
-* `odk:import`: to add/remove import declarations;
-* `odk:obsolete-replace`: to obsolete an entity and replace all its
-  usages with another entity;
 * `odk:check`: to peform various QC checks on an ontology;
 * `odk:extract-orcids`: to create a module of referenced ORCIDIO
-  individuals.
+  individuals;
+* `odk:import`: to add/remove import declarations;
+* `odk:normalize`: to "normalise" an ontology;
+* `odk:obsolete-replace`: to obsolete an entity and replace all its
+  usages with another entity;
+* `odk:subset`: to create ontology subsets.
 
 Building
 --------

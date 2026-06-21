@@ -11,19 +11,19 @@ Available commands
 ------------------
 Currently, the ODK ROBOT plugin provides the following commands:
 
-* [odk:subset](subset.html), to create ontology subsets;
-* [odk:check-align](alignment.html), to check the alignment of an
-  ontology against an upper-level ontology and/or arbitrary root terms;
-* [odk:normalize](normalize.html), to perform various normalisation
-  operations on an ontology;
+* [odk:check-align](alignment.html), to check the alignment of an ontology
+  against an upper-level ontology and/or arbitrary root terms;
+* [odk:check](check.html), to perform various checks on an ontology;
+* [odk:extract-orcids](extract-orcids.html), to create a module containing all
+  the ORCID individuals referenced in an ontology.
 * [odk:import](import.html), to add or remove import declarations in an
   ontology;
-* [odk:obsolete-replace](obsolete-replace.html), to obsolete an entity
-  replace all its usages with another entity;
-* [odk:check](check.html), to perform various checks on an ontology;
-* [odk:extract-orcids](extract-orcids.html), to create a module
-  containing all the ORCID individuals referenced in an ontology.
-  
+* [odk:normalize](normalize.html), to perform various normalisation operations
+  on an ontology;
+* [odk:obsolete-replace](obsolete-replace.html), to obsolete an entity replace
+  all its usages with another entity;
+* [odk:subset](subset.html), to create ontology subsets;
+
 Using with the ODK
 ------------------
 The plugin is (or will be) provided with the ODK Docker image. To use it

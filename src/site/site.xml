@@ -9,13 +9,13 @@
       <item name="API Documentation" href="apidocs/index.html" />
     </menu>
     <menu name="Commands">
-      <item name="subset" href="subset.html" />
-      <item name="check-align" href="alignment.html" />
-      <item name="normalize" href="normalize.html" />
-      <item name="import" href="import.html "/>
-      <item name="obsolete-replace" href="obsolete-replace.html" />
       <item name="check" href="check.html" />
+      <item name="check-align" href="alignment.html" />
       <item name="extract-orcids" href="extract-orcids.html" />
+      <item name="import" href="import.html "/>
+      <item name="normalize" href="normalize.html" />
+      <item name="obsolete-replace" href="obsolete-replace.html" />
+      <item name="subset" href="subset.html" />
     </menu>
     <menu name="Links">
       <item name="Issue tracker" href="https://github.com/INCATools/odk-robot-plugin/issues" />

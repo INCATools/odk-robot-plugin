@@ -40,6 +40,16 @@ import org.semanticweb.owlapi.model.parameters.Imports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A command to perform some quality control checks on an ontology.
+ * <p>
+ * Checks to perform are indicated with the <code>--check NAME,...</code>
+ * option, where <code>NAME</code> is a check to enable.
+ * <p>
+ * Currently, the only available check is <code>deprecated-references</code>,
+ * which checks whether the ontology contains references to any deprecated
+ * entity.
+ */
 public class CheckCommand extends BasePlugin {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckCommand.class);

@@ -33,9 +33,15 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.parameters.Imports;
 
+/**
+ * A command to extract ORCIDIO individuals referenced within an ontology.
+ * <p>
+ * Given an input ontology, this command looks for annotations that reference
+ * ORCID identifiers, then create an output ontology containing the named
+ * individuals from <a href="https://github.com/choyt/orcidio">ORCIDIO</a> that
+ * represent the referenced persons.
+ */
 public class ExtractOrcidCommand extends BasePlugin {
-
-    private final static IRI ORCIDIO = IRI.create("https://w3id.org/orcidio/orcidio.owl");
 
     public ExtractOrcidCommand() {
         super("extract-orcids", "extract ORCIDs referenced in the ontology",
@@ -81,7 +87,7 @@ public class ExtractOrcidCommand extends BasePlugin {
         } else if ( line.hasOption("orcid-iri") ) {
             orcidOnt = ioHelper.loadOntology(ioHelper.createIRI(line.getOptionValue("orcid-iri")));
         } else {
-            orcidOnt = ioHelper.loadOntology(ORCIDIO);
+            orcidOnt = ioHelper.loadOntology(Constants.ORCIDIO_IRI);
         }
         Set<OWLAxiom> axioms = new HashSet<>();
         for ( IRI ref : refs ) {

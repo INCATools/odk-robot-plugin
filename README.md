@@ -16,8 +16,11 @@ The following commands are provided by the plugin:
   upper-level ontology and/or arbitrary root terms;
 * `odk:normalize`: to "normalise" an ontology;
 * `odk:import`: to add/remove import declarations;
-* `odk:obsolete-replace`: to obsolete an entity and replace all its usages
-  with another entity.
+* `odk:obsolete-replace`: to obsolete an entity and replace all its
+  usages with another entity;
+* `odk:check`: to peform various QC checks on an ontology;
+* `odk:extract-orcids`: to create a module of referenced ORCIDIO
+  individuals.
 
 Building
 --------

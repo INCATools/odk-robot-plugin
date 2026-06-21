@@ -51,4 +51,6 @@ public class Constants {
     public static final IRI HAS_DBXREF = IRI.create(OIO_PREFIX + "hasDbXref");
 
     public static final IRI TERM_REPLACED_BY = IRI.create("http://purl.obolibrary.org/obo/IAO_0100001");
+
+    public static final IRI ORCIDIO_IRI = IRI.create("https://w3id.org/orcidio/orcidio.owl");
 }

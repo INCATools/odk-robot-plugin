@@ -2,6 +2,7 @@ org.incenp.obofoundry.odk.CheckAlignmentCommand
 org.incenp.obofoundry.odk.CheckCommand
 org.incenp.obofoundry.odk.ExtractOrcidCommand
 org.incenp.obofoundry.odk.ImportCommand
+org.incenp.obofoundry.odk.MinimalModuleCommand
 org.incenp.obofoundry.odk.NormalizeCommand
 org.incenp.obofoundry.odk.ObsoleteReplaceCommand
 org.incenp.obofoundry.odk.SubsetCommand

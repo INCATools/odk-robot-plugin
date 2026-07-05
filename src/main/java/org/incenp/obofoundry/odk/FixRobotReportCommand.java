@@ -25,12 +25,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
+import org.incenp.obofoundry.odk.fixreport.IFixableError;
+import org.incenp.obofoundry.odk.fixreport.LowercaseDefinitionError;
+import org.incenp.obofoundry.odk.fixreport.MissingObsoleteLabelError;
 import org.obolibrary.robot.CommandState;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 /**
  * A command to attempt to automatically fix the trivial issues revealed by the
@@ -39,6 +37,10 @@ import org.semanticweb.owlapi.model.OWLOntology;
  * In the context of this command, “trivial” issues are issues that should not
  * require manual intervention on each affected term. For now, this means the
  * “obsolete missing label” issue and the “lowercase definition” issue.
+ * <p>
+ * This requires the report to have been generated with
+ * <code>--labels false</code>, so that entities affected by an issue are
+ * reported with their ID rather than their label.
  */
 public class FixRobotReportCommand extends BasePlugin {
 
@@ -54,78 +56,30 @@ public class FixRobotReportCommand extends BasePlugin {
         if ( !line.hasOption("robot-report") ) {
             throw new Exception("Missing required option --robot-report");
         }
-        Set<Error> errors = parseRobotReport(line.getOptionValue("robot-report"));
 
-        OWLOntology ont = state.getOntology();
-        OWLDataFactory fac = ont.getOWLOntologyManager().getOWLDataFactory();
-        HashSet<OWLAxiom> toRemove = new HashSet<>();
-        HashSet<OWLAxiom> toAdd = new HashSet<>();
-
-        for ( Error error : errors ) {
-            for ( OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(error.subject) ) {
-                if (ax.getProperty().getIRI().equals(error.property)) {
-                    if (ax.getValue().isLiteral()) {
-                        String oldValue = ax.getValue().asLiteral().get().getLiteral();
-                        String newValue = null;
-                        switch (error.type) {
-                        case LOWERCASE_DEFINITION:
-                            newValue = Character.toUpperCase(oldValue.charAt(0)) + oldValue.substring(1);
-                            break;
-
-                        case MISSING_OBSOLETE_LABEL:
-                            newValue = "obsolete " + oldValue;
-                            break;
-                        }
-
-                        if (newValue != null) {
-                            OWLAxiom newAx = fac.getOWLAnnotationAssertionAxiom(fac.getOWLAnnotationProperty(error.property), error.subject, fac.getOWLLiteral(newValue));
-                            toAdd.add(newAx.getAnnotatedAxiom(ax.getAnnotations()));
-                            toRemove.add(ax);
-                        }
-                    }
-                }
-            }
+        for ( IFixableError error : parseRobotReport(line.getOptionValue("robot-report")) ) {
+            error.fixError(state.getOntology());
         }
-
-        ont.getOWLOntologyManager().removeAxioms(ont, toRemove);
-        ont.getOWLOntologyManager().addAxioms(ont, toAdd);
     }
 
-    private Set<Error> parseRobotReport(String file) throws IOException {
-        HashSet<Error> errors = new HashSet<>();
+    private Set<IFixableError> parseRobotReport(String file) throws IOException {
+        HashSet<IFixableError> errors = new HashSet<>();
         BufferedReader reader = new BufferedReader(new FileReader(file));
 
         String line = null;
         while ( (line = reader.readLine()) != null ) {
             String[] items = line.split("\t");
-            if ( items.length < 4 ) {
+            if ( items.length < 5 ) {
                 continue;
             }
             if ( items[1].equals("lowercase_definition") ) {
-                errors.add(new Error(ErrorType.LOWERCASE_DEFINITION, items[2], items[3]));
+                errors.add(new LowercaseDefinitionError(ioHelper.createIRI(items[2]), items[4]));
             } else if ( items[1].equals("missing_obsolete_label") ) {
-                errors.add(new Error(ErrorType.MISSING_OBSOLETE_LABEL, items[2], items[3]));
+                errors.add(new MissingObsoleteLabelError(ioHelper.createIRI(items[2]), items[4]));
             }
         }
         reader.close();
 
         return errors;
-    }
-
-    private class Error {
-        ErrorType type;
-        IRI subject;
-        IRI property;
-
-        public Error(ErrorType type, String subject, String property) {
-            this.type = type;
-            this.subject = ioHelper.createIRI(subject);
-            this.property = ioHelper.createIRI(property);
-        }
-    }
-
-    private enum ErrorType {
-        MISSING_OBSOLETE_LABEL,
-        LOWERCASE_DEFINITION
     }
 }

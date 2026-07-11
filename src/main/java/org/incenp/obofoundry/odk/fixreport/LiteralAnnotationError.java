@@ -25,11 +25,15 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents a fixable error that resides in a literal annotation.
  */
 public abstract class LiteralAnnotationError implements IFixableError {
+
+    private static final Logger logger = LoggerFactory.getLogger(LiteralAnnotationError.class);
 
     protected IRI property;
     protected IRI subject;
@@ -66,6 +70,9 @@ public abstract class LiteralAnnotationError implements IFixableError {
                     if ( textValue.equals(value) ) {
                         OWLLiteral newValue = fixValue(oldValue, fac);
                         if ( newValue != null ) {
+                            logger.info("Fixing value of {} annotation on {}: {} -> {}", property.getShortForm(),
+                                    subject.getShortForm(), oldValue, newValue);
+
                             OWLAxiom newAx = fac.getOWLAnnotationAssertionAxiom(fac.getOWLAnnotationProperty(property),
                                     subject, newValue);
                             mgr.addAxiom(ontology, newAx.getAnnotatedAxiom(ax.getAnnotations()));

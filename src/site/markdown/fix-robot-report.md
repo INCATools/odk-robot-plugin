@@ -31,3 +31,11 @@ Currently, the command will fix the following issues:
 
 * `missing_obsolete_label`,
 * `lowercase_definition`.
+
+Fixing dubious issues
+---------------------
+By default, the command only fixes an error if it is positive that (1)
+it is really an error and (2) the possible fix is the correct fix.
+
+To also try to fix errors about which there is an uncertainty, use the
+`--fix-dubious true` option.

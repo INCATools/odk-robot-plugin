@@ -26,9 +26,9 @@ import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 /**
  * Represents the <code>missing_obsolete_label</code> error.
  * <p>
- * This error is fixed simply by append <code>"obsolete "</code> in front of the
- * original value, but only if the original value either has no language tag, or
- * has an English language tag.
+ * This error is fixed simply by appending <code>"obsolete "</code> in front of
+ * the original value, but only if the original value either has no language
+ * tag, or has an English language tag.
  */
 public class MissingObsoleteLabelError extends LiteralAnnotationError {
 
@@ -37,7 +37,7 @@ public class MissingObsoleteLabelError extends LiteralAnnotationError {
     }
 
     @Override
-    protected OWLLiteral fixValue(OWLLiteral oldValue, OWLDataFactory factory) {
+    protected OWLLiteral fixValue(OWLLiteral oldValue, OWLDataFactory factory, boolean dubious) {
         String lang = oldValue.getLang();
         if ( !(lang.isEmpty() || lang.startsWith("en")) ) {
             // Do NOT append an "obsolete " prefix to a non-English label

@@ -24,10 +24,12 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 /**
- * Represents the <code>lowercase_definition</code> error>
+ * Represents the <code>lowercase_definition</code> error.
  * <p>
  * This error is fixed simply by upper-casing the first character of the
- * original value.
+ * original value. However we avoid doing that by default if the initial
+ * lowercase character is followed by an uppercase character, as this could
+ * indicate the initial character is <em>purposefully</em> lowercase.
  */
 public class LowercaseDefinitionError extends LiteralAnnotationError {
 
@@ -36,8 +38,11 @@ public class LowercaseDefinitionError extends LiteralAnnotationError {
     }
 
     @Override
-    protected OWLLiteral fixValue(OWLLiteral oldValue, OWLDataFactory factory) {
+    protected OWLLiteral fixValue(OWLLiteral oldValue, OWLDataFactory factory, boolean dubious) {
         String oldValueString = oldValue.getLiteral();
+        if ( oldValueString.length() > 1 && Character.isUpperCase(oldValueString.charAt(1)) && !dubious ) {
+            return null;
+        }
         String newValueString = Character.toUpperCase(oldValueString.charAt(0)) + oldValueString.substring(1);
         return factory.getOWLLiteral(newValueString, oldValue.getLang());
     }

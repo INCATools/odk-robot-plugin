@@ -55,7 +55,7 @@ public abstract class LiteralAnnotationError implements IFixableError {
     }
 
     @Override
-    public void fixError(OWLOntology ontology) {
+    public void fixError(OWLOntology ontology, boolean dubious) {
         OWLOntologyManager mgr = ontology.getOWLOntologyManager();
         OWLDataFactory fac = mgr.getOWLDataFactory();
 
@@ -68,7 +68,7 @@ public abstract class LiteralAnnotationError implements IFixableError {
                         textValue += "@" + oldValue.getLang();
                     }
                     if ( textValue.equals(value) ) {
-                        OWLLiteral newValue = fixValue(oldValue, fac);
+                        OWLLiteral newValue = fixValue(oldValue, fac, dubious);
                         if ( newValue != null ) {
                             logger.info("Fixing value of {} annotation on {}: {} -> {}", property.getShortForm(),
                                     subject.getShortForm(), oldValue, newValue);
@@ -89,9 +89,11 @@ public abstract class LiteralAnnotationError implements IFixableError {
      * 
      * @param oldValue The literal representing the invalid annotation value.
      * @param factory  A factory that can be used to create the correct value.
+     * @param dubious  If <code>true</code>, fix the error even if we are not
+     *                 certain it is actually an error.
      * @return The correct value to use to replace the original one, or
      *         <code>null</code> if correction could not be performed for any
      *         reason.
      */
-    protected abstract OWLLiteral fixValue(OWLLiteral oldValue, OWLDataFactory factory);
+    protected abstract OWLLiteral fixValue(OWLLiteral oldValue, OWLDataFactory factory, boolean dubious);
 }

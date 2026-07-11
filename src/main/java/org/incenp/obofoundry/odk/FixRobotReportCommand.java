@@ -21,8 +21,9 @@ package org.incenp.obofoundry.odk;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.incenp.obofoundry.odk.fixreport.IFixableError;
@@ -62,23 +63,26 @@ public class FixRobotReportCommand extends BasePlugin {
         }
     }
 
-    private Set<IFixableError> parseRobotReport(String file) throws IOException {
-        HashSet<IFixableError> errors = new HashSet<>();
+    private Collection<IFixableError> parseRobotReport(String file) throws IOException {
+        List<IFixableError> errors = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(file));
 
-        String line = null;
-        while ( (line = reader.readLine()) != null ) {
-            String[] items = line.split("\t");
-            if ( items.length < 5 ) {
-                continue;
+        try {
+            String line = null;
+            while ( (line = reader.readLine()) != null ) {
+                String[] items = line.split("\t");
+                if ( items.length < 5 ) {
+                    continue;
+                }
+                if ( items[1].equals("lowercase_definition") ) {
+                    errors.add(new LowercaseDefinitionError(ioHelper.createIRI(items[2]), items[4]));
+                } else if ( items[1].equals("missing_obsolete_label") ) {
+                    errors.add(new MissingObsoleteLabelError(ioHelper.createIRI(items[2]), items[4]));
+                }
             }
-            if ( items[1].equals("lowercase_definition") ) {
-                errors.add(new LowercaseDefinitionError(ioHelper.createIRI(items[2]), items[4]));
-            } else if ( items[1].equals("missing_obsolete_label") ) {
-                errors.add(new MissingObsoleteLabelError(ioHelper.createIRI(items[2]), items[4]));
-            }
+        } finally {
+            reader.close();
         }
-        reader.close();
 
         return errors;
     }

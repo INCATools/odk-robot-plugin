@@ -55,9 +55,10 @@ public abstract class LiteralAnnotationError implements IFixableError {
     }
 
     @Override
-    public void fixError(OWLOntology ontology, boolean dubious) {
+    public boolean fixError(OWLOntology ontology, boolean dubious) {
         OWLOntologyManager mgr = ontology.getOWLOntologyManager();
         OWLDataFactory fac = mgr.getOWLDataFactory();
+        boolean fixed = false;
 
         for ( OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(subject) ) {
             if ( ax.getProperty().getIRI().equals(property) ) {
@@ -77,11 +78,15 @@ public abstract class LiteralAnnotationError implements IFixableError {
                                     subject, newValue);
                             mgr.addAxiom(ontology, newAx.getAnnotatedAxiom(ax.getAnnotations()));
                             mgr.removeAxiom(ontology, ax);
+
+                            fixed = true;
                         }
                     }
                 }
             }
         }
+
+        return fixed;
     }
 
     /**

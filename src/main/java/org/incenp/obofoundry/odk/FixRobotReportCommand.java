@@ -31,6 +31,8 @@ import org.incenp.obofoundry.odk.fixreport.LowercaseDefinitionError;
 import org.incenp.obofoundry.odk.fixreport.MissingObsoleteLabelError;
 import org.obolibrary.robot.CommandLineHelper;
 import org.obolibrary.robot.CommandState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A command to attempt to automatically fix the trivial issues revealed by the
@@ -45,6 +47,8 @@ import org.obolibrary.robot.CommandState;
  * reported with their ID rather than their label.
  */
 public class FixRobotReportCommand extends BasePlugin {
+
+    private final static Logger logger = LoggerFactory.getLogger(FixRobotReportCommand.class);
 
     public FixRobotReportCommand() {
         super("fix-robot-report", "fix trivial errors revealed by the report command",
@@ -61,9 +65,15 @@ public class FixRobotReportCommand extends BasePlugin {
         }
 
         boolean dubious = CommandLineHelper.getBooleanValue(line, "fix-dubious", false);
-        for ( IFixableError error : parseRobotReport(line.getOptionValue("robot-report")) ) {
-            error.fixError(state.getOntology(), dubious);
+        Collection<IFixableError> errors = parseRobotReport(line.getOptionValue("robot-report"));
+        int fixed = 0;
+        for ( IFixableError error : errors ) {
+            if ( error.fixError(state.getOntology(), dubious) ) {
+                fixed += 1;
+            }
         }
+
+        logger.info("Fixed {} issues (out of {})", fixed, errors.size());
     }
 
     private Collection<IFixableError> parseRobotReport(String file) throws IOException {

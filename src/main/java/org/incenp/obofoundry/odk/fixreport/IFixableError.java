@@ -32,6 +32,7 @@ public interface IFixableError {
      * @param ontology The ontology containing the error to fix.
      * @param dubious  If <code>true</code>, fix the error even if we are not
      *                 certain it is actually an error.
+     * @return <code>true</code> if the error has indeed been fixed.
      */
-    public void fixError(OWLOntology ontology, boolean dubious);
+    public boolean fixError(OWLOntology ontology, boolean dubious);
 }

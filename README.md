@@ -16,6 +16,8 @@ The following commands are provided by the plugin:
 * `odk:check`: to peform various QC checks on an ontology;
 * `odk:extract-orcids`: to create a module of referenced ORCIDIO
   individuals;
+* `odk:fix-robot-report`: to automatically fix some of the issues
+  reported by ROBOT’s `report` command;
 * `odk:import`: to add/remove import declarations;
 * `odk:normalize`: to "normalise" an ontology;
 * `odk:obsolete-replace`: to obsolete an entity and replace all its

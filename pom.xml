@@ -11,6 +11,9 @@
   <licenses>
     <license>
       <name>BSD-3-Clause</name>
+      <url>https://spdx.org/licenses/BSD-3-Clause.html</url>
+      <distribution>manual</distribution>
+      <comments>BSD 3-Clause “Revised” License</comments>
     </license>
   </licenses>
 
@@ -18,7 +21,7 @@
     <developer>
       <id>damien</id>
       <name>Damien Goutte-Gattat</name>
-      <email>dpg44@cam.ac.uk</email>
+      <email>dgouttegattat@incenp.org</email>
     </developer>
   </developers>
 
